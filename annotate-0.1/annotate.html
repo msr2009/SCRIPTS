@@ -1,0 +1,39 @@
+
+<html> 
+  <head> 
+<title>Annotate: Annotation of single-nucleotide variants in the yeast genome</title> 
+</head> 
+<body> 
+<h1>Annotate: Annotation of single-nucleotide variants in the yeast genome</h1> 
+ 
+<p>Annotate is a software package that annotates mutations in a genome sequence for possible functional consequences. The software takes a BED file containing the location and identity of mutations, a parental genome sequence, and an annotations file as input, and outputs the annotation for each mutation. If mutations occur in coding sequences, the software will determine the possible changes to protein sequence. Annotate is written in Python. To cite Annotate, please see:
+
+<blockquote>The yeast Alix homolog, Bro1, functions as an ubiquitin receptor  for protein sorting into multi vesicular endosomes. Pashkova N, Gakhar L, Winistorfer S, Sunshine AB, Rich M, Dunham MJ, Yu L, Piper R. Developmental Cell. In press.</blockquote>
+
+<h2>Data Files</h2>
+
+<p>Mutations to be annotated should be provided in a simple BED file containing the chromosome, start position, stop position, parental allele, and derived allele.  For example:
+
+<pre class="code">
+chr1   213941196  213941196  A  G
+chr10  942363     942363     C  G	
+</pre>
+</p>
+
+<p>Annotate currently relies on three data files to perform annotations - a FASTA file of the parental genome sequence, a FASTA file of coding sequences, and a GFF file containing annotations. These files are included in the Annotate-0.1.tar.gz download, but the most up-to-date versions can be downloaded at the <a href="http://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/">Saccharomyces Genome Database</a>.</p>
+
+<h2>Documentation</h2> 
+ 
+<p><a href="docs/README.txt">Read the documentation</a> 
+ 
+<h2>Support</h2> 
+ 
+<p>For support of Annotate, please write to Matt Rich (mattrich at uw dot edu)
+ 
+<h2>Source code</h2> 
+
+<a href="src/Annotate-0.1.tar.gz">Current version (0.1)</a>
+
+</body> 
+</html> 
+

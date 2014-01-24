@@ -1,0 +1,7 @@
+chr	start	stop	ref	obs	annotation	region	protein
+2	217123	217124	C	CT	frameshift-insertion	YBL006C	G3R; Truncation:5/181
+2	217123	217124	C	CT	5'-upstream	YBL005W	-348
+1	182509	182509	TA	T	intergenic	NA	NA
+1	197919	197919	G	GA	intergenic	NA	NA
+4	433614	433615	G	AA	frameshift-insertion	YDL008W	V40N; Truncation:49/166
+4	433614	433615	G	AA	5'-upstream	YDL009C	-365

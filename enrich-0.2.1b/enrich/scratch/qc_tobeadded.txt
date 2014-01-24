@@ -1,0 +1,33 @@
+QC FEATURES TO BE ADDED:
+	
+	1) Make QC folder to contain all necessary information (in JSON dump) DONE
+	
+	2) Summary: # of reads total, passed filtration, filtered, unique variants (%single, %double, etc..)
+		1) Total number of reads (after read_fuser) DONE in read_fuser
+		2) Number of reads in files after read_aligner DONE (counters in read_aligner)
+
+		6) Total variants (map_counts) DONE
+		7) Total variants in intersection of sel/unsel ratios files (all, m1, m2) (map_ratios) DONE
+	
+	3) Average quality at each base along read1 and read2 (DONE in read_fuser)
+	
+	4) Why rejected reads were rejected? (See MAQ?)
+		1) Parse qc_removed file < GRIFFIN DID THIS
+	
+	5) Where mutations occur in DNA (to check for uniformity of mutagenesis)
+		1) map_counts DONE
+	
+	6) Distribution of # of mutations/variant
+		1) map_counts DONE
+	
+	7) Variants with counts in input, but not in selected (map_ratios) DONE
+		
+HOW TO DO IT
+
+	1) create qc folder in project directory
+	2) create empty file to store JSON dump of data
+	3) incrementally add data to JSON file 
+		a) open JSON file, parse
+		b) add new entry to dict
+		c) write to JSON file
+		

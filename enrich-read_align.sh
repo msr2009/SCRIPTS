@@ -1,0 +1,14 @@
+#!/bin/bash
+
+STARTDATE=`/bin/date`
+echo "**** JOB STARTED AT $STARTDATE"
+
+echo "file: $1"
+echo "avg_quality: $2"
+echo "min_quality: $3"
+
+enrich read_align /net/fields/vol1/home/mattrich/Tat_Mutagenesis/Tat_mutfilter $1 TGCTTTCATTGCCAAGTTTGTTTCATAACAAAAGCCTTAGGCATCTCCTATGGCAGGAAGAAAAGAAGACAGAGGAGGAGACCTCCTCAAGGCAGTCAGACTCATCAAGTTTCTCTATCAAAGCAA CFHCQVCFITKALGISYGRKKRRQRRRPPQGSQTHQVSLSKQ 0 0 4 $2 y 0 B L $3 31 91
+
+ENDDATE=`/bin/date`
+echo "**** JOB ENDED AT $ENDDATE"
+

@@ -1,0 +1,57 @@
+"""
+parseGFF.py 
+
+parses GFF file to get information needed for yeast_annotation.py
+"""
+
+def main(gff, exclude):
+	#dictionaries to store genes or noncoding elements
+	genes = {}
+	noncoding = {}
+
+	#read GFF file, parse information
+	for line in open(gff, 'r'):
+		#skip header lines
+		if line.startswith('#') == True:
+			continue
+		l = line.strip().split('\t')
+		
+		#list to hold annotation information found in l[8]
+		ann_list = {y[0]: y[1] for y in [x.split(';') for x in l[8]]}
+		
+		#check if annotation is in exclude list, and skip if it is
+		if l[2] in exclude:
+			continue
+		
+		#get chromosome
+		ch = l[0][3:]
+		#check annotation
+		#if it's a gene, then add the start, stop, and chromosome to the genes dictionary
+		if l[2] == "gene":
+			genes[ann_list['ID']] = [ann_list['ID'], l[3], l[4], [  ], [  ], 0, chromsome_conversion(l[0][3:]) ]
+		#if there's a CDS or intron associated, then add those as well (CDS=exon)	
+		elif l[2] == "CDS" and ann_list['Parent'] in genes:
+			genes[ann_list['Parent']][3].append(l[3],l[4])
+		elif l[2] == "intron" and ann_list['Parent'] in genes:
+			genes[ann_list['Parent']][4].append(l[3],l[4])
+		#otherwise, it'll be a noncoding region (or tRNA, etc...)
+		else:
+			
+		
+		
+		
+		
+		
+		
+def chromosome_conversion(chrom_number):
+	chrom_conv = {'I':1, 'II':2, 'III':3, 'IV':4, 'V':5, 'VI':6, 'VII':7, 'VIII':8, 'IX':9, 'X':10, 
+				'XI':11, 'XII':12, 'XIII':13, 'XIV':14, 'XV':15, 'XVI':16, 'Mito':17, 'mitochondrion':17,
+				'to':17, 'on':17, 'M':17}
+	
+	chrom_number = chrom_number.split('chr')[-1]
+	
+	try:
+		if int(chrom_number) in chrom_conv.values():
+			return int(chrom_number)
+	except ValueError:			
+		return chrom_conv[chrom_number]		 
