@@ -7,8 +7,6 @@ Matt Rich, 2/2013
 """
 
 def main(forward, reverse, index, mismatch, index_list):
-	print index_list
-
 	#create outfiles for all indices (and one for headers that don't match any indices close enough)
 	outfiles = {}
 	for x in index_list:
@@ -19,8 +17,6 @@ def main(forward, reverse, index, mismatch, index_list):
 	outfiles['NNN'] = [ open(forward.strip('.fq')+'_NNN.fq','w'), open(index.strip('.fq')+'_NNN.fq','w') ]
 	if reverse != None:
 		outfiles['NNN'].append(open(reverse.strip('.fq')+'_NNN.fq','w'))
-
-	print outfiles	
 
 	#open fastq files		
 	forw = open(forward, 'r')
@@ -92,4 +88,5 @@ if __name__ == '__main__':
 	parser.add_option('--index_list', action = 'store', type = 'string', dest = 'index_list', help = 'comma-delimited list of index seqeunces')
 	(option, args) = parser.parse_args()
 	
-	main(option.forward, option.reverse, option.index, option.mismat
+	main(option.forward, option.reverse, option.index, option.mismatch, option.index_list.split(','))	
+	
