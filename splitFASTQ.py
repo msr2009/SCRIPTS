@@ -92,5 +92,4 @@ if __name__ == '__main__':
 	parser.add_option('--index_list', action = 'store', type = 'string', dest = 'index_list', help = 'comma-delimited list of index seqeunces')
 	(option, args) = parser.parse_args()
 	
-	main(option.forward, option.reverse, option.index, option.mismatch, option.index_list.split(','))	
-	
+	main(option.forward, option.reverse, option.index, option.mismat
