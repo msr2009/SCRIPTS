@@ -7,6 +7,8 @@ Matt Rich, 2/2013
 """
 
 def main(forward, reverse, index, mismatch, index_list):
+	print index_list
+
 	#create outfiles for all indices (and one for headers that don't match any indices close enough)
 	outfiles = {}
 	for x in index_list:
@@ -16,15 +18,16 @@ def main(forward, reverse, index, mismatch, index_list):
 	
 	outfiles['NNN'] = [ open(forward.strip('.fq')+'_NNN.fq','w'), open(index.strip('.fq')+'_NNN.fq','w') ]
 	if reverse != None:
-		outfiles['NNN'].append(open(reverse.strip('.fq')+'_'+x+'.fq','w'))
+		outfiles['NNN'].append(open(reverse.strip('.fq')+'_NNN.fq','w'))
 
-	
+	print outfiles	
+
 	#open fastq files		
 	forw = open(forward, 'r')
 	ind = open(index, 'r')
 	if reverse != None:
 		rev = open(reverse, 'r')
-		
+			
 	#start looping through files, reading in 4 lines at a time
 	while True:
 		
