@@ -44,7 +44,7 @@ def main(num, den, exc, decile, noprint):
 				print "\t".join(well.split(":") + [str(x) for x in [dat, pre_background, post_background, pre_intensity, post_intensity]])
 			wells_dat[well] = dat	
 			dat_list.append(dat)
-	print len(dat_list)
+	#print len(dat_list)
 	if decile != None:
 		#open some output files
 		deciles = [10,20,30,40,50,60,70,80,90,100]

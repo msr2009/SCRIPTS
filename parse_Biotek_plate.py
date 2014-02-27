@@ -7,7 +7,7 @@ Matt Rich 01/2014
 def main(m, p, all_out, compare_strains):
 	#first, make mapping dictionary
 	plate_map = {}
-	for line in open(m, "r"):
+	for line in open(m, "rU"):
 		l = line.strip().split('\t')
 		if line.startswith("#") == True:
 			#print "ignoring" + l[0]+l[1]+l[2]
@@ -28,7 +28,7 @@ def main(m, p, all_out, compare_strains):
 	for plate in p:
 		
 		#then read rows one at a time
-		for line in open(plate, "r"):
+		for line in open(plate, "rU"):
 			
 			r = line.strip().split("\t")	
 			#read data from wells in each row
