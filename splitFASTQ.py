@@ -24,62 +24,55 @@ def main(forward, reverse, index, mismatch, index_list):
 	if reverse != None:
 		rev = open(reverse, 'r')
 			
-	#start looping through files, reading in 4 lines at a time
-	while True:
-		
-		i_read = [ ind.readline().strip() for i in range(4) ]
-		if i_read[0] == '':
-			break
-		
-		f_read = [ forw.readline().strip() for i in range(4) ]
-		if reverse != None:
-			r_read = [ rev.readline().strip() for i in range(4) ]  
+	#use read_fastq_multi to read teh fastq files
+	for record in read_fastq_multi([forward, index, reverse]):
+		f_read = record[0][1]
+		i_read = record[1][1]
+		r_read = record[2][1]
 		
 		found_index = False
 		
 		#check index sequence
-		if i_read[1] in index_list:
-			print >> outfiles[i_read[1]][0], '\n'.join(f_read)
-			print >> outfiles[i_read[1]][1], '\n'.join(i_read)
-			if reverse != None:
-				print >> outfiles[i_read[1]][2], '\n'.join(r_read)
+                if i_read in index_list:
+			print_fastq(record[0], outfiles[i_read][0])
+			print_fastq(record[1], outfiles[i_read][1])
+			print_fastq(record[2], outfiles[i_read][2])
 
-			found_index = True
-			
-		if found_index == False and mismatch != 0:
-			#check for close matches (within threshold)
-			diffs = [ hammingDistance(i_read[1], seq) for seq in index_list ]
-			for d in range(len(diffs)):
-				if diffs[d] <= mismatch:	
-					print >> outfiles[index_list[d]][0], '\n'.join(f_read)
-					print >> outfiles[index_list[d]][1], '\n'.join(i_read)
-					if reverse != None:
-						print >> outfiles[index_list[d]][2], '\n'.join(r_read)
+                        found_index = True
 
-					found_index = True
-					break
-					
-		#no close match
-		if found_index == False:
-			print >> outfiles['NNN'][0], '\n'.join(f_read)
-			print >> outfiles['NNN'][1], '\n'.join(i_read)
-			if reverse != None:
-				print >> outfiles['NNN'][2], '\n'.join(r_read)
-		
-	for f in outfiles:	
-		outfiles[f][0].close()
-		outfiles[f][1].close()
-		try:
-			outfiles[f][2].close()
-		except:
-			pass
-		
+                if found_index == False and mismatch != 0:
+                        #check for close matches (within threshold)
+                        diffs = [ hammingDistance(i_read, seq) for seq in index_list ]
+                        for d in range(len(diffs)):
+                                if diffs[d] <= mismatch:
+					print_fastq(record[0], outfiles[index_list[d]][0])
+		                        print_fastq(record[1], outfiles[index_list[d]][1])
+                		        print_fastq(record[2], outfiles[index_list[d]][2])
+
+                                        found_index = True
+                                        break
+
+                #no close match
+                if found_index == False:
+                        print_fastq(record[0], outfiles["NNN"][0])
+                        print_fastq(record[1], outfiles["NNN"][1])
+                        print_fastq(record[2], outfiles["NNN"][2])
+
+    	#close all the files once we're done splitting            
+        for f in outfiles:      
+                outfiles[f][0].close()
+                outfiles[f][1].close()
+                try:
+                        outfiles[f][2].close()
+                except:
+                        pass
+
 def hammingDistance(seq1, seq2):
 	return len(seq1) - sum([ seq1[x] == seq2[x] for x in range(len(seq1))])
 	
 if __name__ == '__main__':
 	from optparse import OptionParser
-	
+	from fastq_tools import read_fastq_multi, print_fastq
 	parser = OptionParser()
 	parser.add_option('--forward', action = 'store', type = 'string', dest = 'forward', help = 'path to forward reads file')
 	parser.add_option('--reverse', action = 'store', type = 'string', dest = 'reverse', help = 'path to reverse reads file', default=None)
