@@ -13,28 +13,27 @@ def main(bullshit_infile, mapping_file, combine_replicates, theonlydatawewant, s
 	
 	#open the shitty file and make it less shitty:
 	#find the data that we want (which isn't the only shit in this file)
-	stupid_transposed_data = [x.split('\t') for x in "".join(open(bullshit_infile,'r').read().split(theonlydatawewant)[1:3]).split("Results")[0].strip().split('\r\n')]
+	stupid_transposed_data = [x.split('\t') for x in "".join(open(bullshit_infile,'rU').read().split(theonlydatawewant)[1:3]).split("Results")[0].strip().split('\n')]
 	#transpose it so that all the data for each well is on the same row (not sure why this isn't the case anyway)
 	better_data = zip(*stupid_transposed_data)
-
 	#open the mapping file, and store that information
 	mapping = {}
-	for line in open(mapping_file,'r'):
+	for line in open(mapping_file,'rU'):
 		
 		if line.startswith('Row') == True:
 			continue
 			
 		l = line.strip().split('\t')
-		mapping[l[0]+l[1]] = l[2] + ":" + l[3]
-
+		mapping[l[0]+l[1]+l[2]] = l[3] + ":" + l[4]
 	#loop through each curve, and store those data together, based on their well mapping
 	for c in better_data:
 		if c[0] == "Time":
+			print c[1:]
 			curves["Time"] = [ convertHHMMSStoDecimal(x) for x in c[1:] ] 
-		elif c[0] == "T\xb0 ":
+		elif c[0] == "T\xb0 " or c[0] == "T\xa1 ":
 			continue
 		else:
-			strain_cond = mapping[c[0]]
+			strain_cond = mapping["1"+c[0]]
 			data = list([float(x) for x in c[1:]])
 			if smooth == True:
 				data = smoothData(data)
