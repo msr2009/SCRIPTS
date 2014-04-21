@@ -29,7 +29,7 @@ def main(cm_output, ref_fasta, offset, printBED, cutoff, noheader, verbose):
 	pileup = [0]*(len(ref_seq[ref_seq.keys()[0]]))
 
 	while True:	
-		line = cm.readline()
+		line = cm.readline()	
 		if line.startswith('Maximal single base matches') == True:
 			while line.strip() != '':
 				line = cm.readline()
