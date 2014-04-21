@@ -12,10 +12,6 @@ from Bio import SeqIO
 from Bio.Restriction import *
 
 def cutORFs(orfs_file, sites_list, mode):
-	#see if sequences are known restriction enzymes
-	#make list of all NEB restriction enzymes
-	rb = RestrictionBatch(first=[], suppliers='N')
-	print rb
 		
 	#create dictionary of ORF sequences
 	genes = {}
