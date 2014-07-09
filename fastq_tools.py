@@ -141,8 +141,9 @@ def read_fastq_multi(fnames, filter_function=None, buffer_size=BUFFER_SIZE,
     """
     fq_generators = list()
     for f in fnames:
-        fq_generators.append(read_fastq(f, filter_function=None,
-                             buffer_size=BUFFER_SIZE))
+	if f != None:
+        	fq_generators.append(read_fastq(f, filter_function=None,
+                	             buffer_size=BUFFER_SIZE))
 
     for records in izip_longest(*fq_generators, fillvalue=None):
         if None in records: # mismatched file lengths
