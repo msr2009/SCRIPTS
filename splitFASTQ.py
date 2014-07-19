@@ -73,7 +73,17 @@ def main(forward, reverse, index, mismatch, index_list, name_list):
 
 def hammingDistance(seq1, seq2):
 	return len(seq1) - sum([ seq1[x] == seq2[x] for x in range(len(seq1))])
-	
+
+def readIndexFile(f): 
+	d = []
+	n = []
+
+	for line in open(f, 'r'):
+		l = line.strip().split('\t')
+		d.append(l[0])
+		n.append(l[1])
+	return d, n
+
 if __name__ == '__main__':
 	from optparse import OptionParser
 	from fastq_tools import read_fastq_multi, print_fastq
@@ -84,9 +94,16 @@ if __name__ == '__main__':
 	parser.add_option('--mismatch', action = 'store', type = 'int', dest = 'mismatch', default = 1, help = 'number of permitted mismatches (Default=1)')
 	parser.add_option('--index_list', action = 'store', type = 'string', dest = 'index_list', help = 'comma-delimited list of index sequences')
 	parser.add_option('--name_list', action = 'store', type = 'string', dest = 'name_list', help = 'comma-delimited list of names for fastq files', default=None)
+	parser.add_option('--list_file', action = 'store_true', dest = 'listfile', help = '--index_list is a tab-delimited file containing indices and, optionally, names', default=False)
 	(option, args) = parser.parse_args()
 	
+	names = option.name_list.split(',')
+	id = option.index_list.split(',')
+	
+	if option.listfile:
+		id, names = readIndexFile(option.index_list)
+	
 	if option.name_list != None:	
-		main(option.forward, option.reverse, option.index, option.mismatch, option.index_list.split(','), option.name_list.split(','))
+		main(option.forward, option.reverse, option.index, option.mismatch, id, names)
 	else:
-		main(option.forward, option.reverse, option.index, option.mismatch, option.index_list.split(','), option.index_list.split(','))	
+		main(option.forward, option.reverse, option.index, option.mismatch, option.id, option.id)	
