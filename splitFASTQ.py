@@ -17,13 +17,14 @@ def main(forward, reverse, index, mismatch, index_list, name_list):
 	outfiles['NNN'] = [ open(forward.strip('.fq')+'_NNN.fq','w'), open(index.strip('.fq')+'_NNN.fq','w') ]
 	if reverse != None:
 		outfiles['NNN'].append(open(reverse.strip('.fq')+'_NNN.fq','w'))
-
+	
 	#open fastq files		
 	forw = open(forward, 'r')
 	ind = open(index, 'r')
 	if reverse != None:
 		rev = open(reverse, 'r')
-			
+	
+	counter = 0		
 	#use read_fastq_multi to read teh fastq files
 	for record in read_fastq_multi([forward, index, reverse]):
 		f_read = record[0][1]
@@ -43,7 +44,7 @@ def main(forward, reverse, index, mismatch, index_list, name_list):
                         found_index = True
 
                 if found_index == False and mismatch != 0:
-                        #check for close matches (within threshold)
+			#check for close matches (within threshold)
                         diffs = [ hammingDistance(i_read, seq) for seq in index_list ]
                         for d in range(len(diffs)):
                                 if diffs[d] <= mismatch:
@@ -61,6 +62,12 @@ def main(forward, reverse, index, mismatch, index_list, name_list):
                         print_fastq(record[1], outfiles["NNN"][1])
 			if reverse != None:
 				 print_fastq(record[2], outfiles["NNN"][2])
+		
+		#increment counter
+		counter += 1.0
+		if counter % 100000 == 0:
+			divcount = counter/1000000.0
+			print 'split %0.1fM reads' % divcount
 
     	#close all the files once we're done splitting            
         for f in outfiles:      
@@ -80,8 +87,8 @@ def readIndexFile(f):
 
 	for line in open(f, 'r'):
 		l = line.strip().split('\t')
-		d.append(l[0])
-		n.append(l[1])
+		d.append(l[1])
+		n.append(l[0])
 	return d, n
 
 if __name__ == '__main__':
@@ -97,13 +104,22 @@ if __name__ == '__main__':
 	parser.add_option('--list_file', action = 'store_true', dest = 'listfile', help = '--index_list is a tab-delimited file containing indices and, optionally, names', default=False)
 	(option, args) = parser.parse_args()
 	
-	names = option.name_list.split(',')
-	id = option.index_list.split(',')
+	id = []
+	names = None	
+
+	if option.reverse == "None":
+		option.reverse = None
 	
 	if option.listfile:
 		id, names = readIndexFile(option.index_list)
+	else:
+		try:
+			names = option.name_list.split(',')
+		except AttributeError:
+			pass
+		id = option.index_list.split(',')
 	
-	if option.name_list != None:	
+	if names:	
 		main(option.forward, option.reverse, option.index, option.mismatch, id, names)
 	else:
-		main(option.forward, option.reverse, option.index, option.mismatch, option.id, option.id)	
+		main(option.forward, option.reverse, option.index, option.mismatch, id, id)	
