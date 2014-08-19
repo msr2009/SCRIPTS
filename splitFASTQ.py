@@ -100,9 +100,8 @@ if __name__ == '__main__':
 	parser.add_option('--reverse', action = 'store', type = 'string', dest = 'reverse', help = 'path to reverse reads file', default=None)
 	parser.add_option('--index', action = 'store', type = 'string', dest = 'index', help = 'path to index reads file')
 	parser.add_option('--mismatch', action = 'store', type = 'int', dest = 'mismatch', default = 1, help = 'number of permitted mismatches (Default=1)')
-	parser.add_option('--index_list', action = 'store', type = 'string', dest = 'index_list', help = 'comma-delimited list of index sequences')
+	parser.add_option('--index_list', action = 'store', type = 'string', dest = 'index_list', help = 'comma-delimited list of index sequences, or tab-delimited file of name,index pairs')
 	parser.add_option('--name_list', action = 'store', type = 'string', dest = 'name_list', help = 'comma-delimited list of names for fastq files', default=None)
-	parser.add_option('--list_file', action = 'store_true', dest = 'listfile', help = '--index_list is a tab-delimited file containing indices and names (eg., NAME\tINDEX)', default=False)
 	(option, args) = parser.parse_args()
 	
 	id = []
@@ -111,14 +110,17 @@ if __name__ == '__main__':
 	if option.reverse == "None":
 		option.reverse = None
 	
-	if option.listfile:
+	try:
 		id, names = readIndexFile(option.index_list)
-	else:
+	except IOError:
+		print "IndexList isn't a file, parsing as comma-delimited list"
 		try:
 			names = option.name_list.split(',')
 		except AttributeError:
 			pass
 		id = option.index_list.split(',')
+	
+#	print ",".join(map( lambda x: x[0] + ":" + x[1], zip(names, id) ))
 	
 	if names:	
 		main(option.forward, option.reverse, option.index, option.mismatch, id, names)
