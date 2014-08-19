@@ -12,7 +12,7 @@ def main(forward, reverse, index, mismatch, index_list, name_list):
 	for x in range(len(index_list)):
 		outfiles[index_list[x]] = [ open(forward.strip('.fq')+'_'+name_list[x]+'.fq','w'), open(index.strip('.fq')+'_'+name_list[x]+'.fq','w') ]
 		if reverse != None:
-			outfiles[x].append(open(reverse.strip('.fq')+'_'+name_list[x]+'.fq','w'))
+			outfiles[index_list[x]].append(open(reverse.strip('.fq')+'_'+name_list[x]+'.fq','w'))
 	
 	outfiles['NNN'] = [ open(forward.strip('.fq')+'_NNN.fq','w'), open(index.strip('.fq')+'_NNN.fq','w') ]
 	if reverse != None:
@@ -94,6 +94,7 @@ def readIndexFile(f):
 if __name__ == '__main__':
 	from optparse import OptionParser
 	from fastq_tools import read_fastq_multi, print_fastq
+
 	parser = OptionParser()
 	parser.add_option('--forward', action = 'store', type = 'string', dest = 'forward', help = 'path to forward reads file')
 	parser.add_option('--reverse', action = 'store', type = 'string', dest = 'reverse', help = 'path to reverse reads file', default=None)
@@ -101,7 +102,7 @@ if __name__ == '__main__':
 	parser.add_option('--mismatch', action = 'store', type = 'int', dest = 'mismatch', default = 1, help = 'number of permitted mismatches (Default=1)')
 	parser.add_option('--index_list', action = 'store', type = 'string', dest = 'index_list', help = 'comma-delimited list of index sequences')
 	parser.add_option('--name_list', action = 'store', type = 'string', dest = 'name_list', help = 'comma-delimited list of names for fastq files', default=None)
-	parser.add_option('--list_file', action = 'store_true', dest = 'listfile', help = '--index_list is a tab-delimited file containing indices and, optionally, names', default=False)
+	parser.add_option('--list_file', action = 'store_true', dest = 'listfile', help = '--index_list is a tab-delimited file containing indices and names (eg., NAME\tINDEX)', default=False)
 	(option, args) = parser.parse_args()
 	
 	id = []
