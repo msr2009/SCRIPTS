@@ -10,7 +10,7 @@ while (<>) {
     $parts[8] =~ tr/./N/;
     print "$parts[8]\n";
     print "+\n";
-    $parts[9] = join('', map{chr(ord($_)-31)} split(//,$parts[9]));
+    $parts[9] = join('', map{chr(ord($_)-33)} split(//,$parts[9]));
     print "$parts[9]\n";
 }
 
