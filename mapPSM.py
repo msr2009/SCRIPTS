@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #Warning: arbitrary, hard-coded limits on ratio below
 #This script takes mapunlink files (it can create a ratio between two files as in roundX/roundY) and then generates a fake list of sequences for input into logoPlot or some other sequence logo generator.
+#This script written by Doug Fowler (UW)
 
 import sys, os, time, optparse, yapseq, general, pdb
 
