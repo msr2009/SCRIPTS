@@ -1,9 +1,19 @@
 """
+mutCas9-oligo-score.py
 
+Script for scoring (and generating) Cas9 guide RNA sequences to
+for cytosine deamination mutagenesis.
 
-comments
+From FASTA input, can identify all possible targets, scores mutations based on
+scoring matrix (also as input). Can normalize scores based on distribution of
+mutations (in this case, a 4xN matrix for mutations from C to other bases). 
 
-Matt Rich, DATE
+Creates BED-like data file containing normalized scores and plots scores across
+sequence.
+
+Requires numpy and (matplotlib for plotting.)
+
+Matt Rich, 12/2015
 """
 
 from fasta_iter import fasta_iter
@@ -40,15 +50,15 @@ def main(grna, seq, blosum, mdist, fasta_name, forceC, pre_out):
 
 	for t in targets:
 		blos_scores = [] #store all our blosum scores here
-		#identify the residue and position of each site in gRNA
 		strand = 1
 	
+		#score each base in each target for possible mutations
 		for p in range(len(t[2])):
 			if t[3] == "+":
 				res = (t[0]+p)/3
 				pos = (t[0]+p)%3
 				aa = seq[res*3:res*3+3]
-				if forceC and t[2][p] != "C":
+				if forceC and t[2][p] != "C":	#require that base is cytosine
 					blos_scores.append([np.nan, np.nan, np.nan, np.nan])				
 				else:
 					blos_scores.append(blosAA(aa, pos, blosum))				
@@ -73,14 +83,17 @@ def main(grna, seq, blosum, mdist, fasta_name, forceC, pre_out):
 				blos_scores = np.multiply(blos_scores, mdist[0])
 			else:
 				blos_scores = np.multiply(blos_scores, mdist[1])
-	
+		
+		#update min and max values
 		if np.nanmin(np.nansum(blos_scores, axis=0)) < score_min:
 			score_min = np.nanmin(np.nansum(blos_scores, axis=0))
 		if np.nanmax(np.nansum(blos_scores, axis=0)) > score_max:
 			score_max = np.nanmax(np.nansum(blos_scores, axis=0))
 	
+		#print and create plot of data
 		printAndPlot(blos_scores, t, fasta_name, strand, dat_out)
 
+	#fix a few plot params -- axis, labels, etc...
 	plt.axis([0, len(seq), score_min-.5, score_max+.5])
 	plt.xlabel("Coding sequence (bp)")
 	plt.ylabel("Normalized BLOSUM64 score")
@@ -157,7 +170,7 @@ def readMutDist(f):
 		n = []
 		for line in open(f, "rU").readlines()[1:]: 
 			m.append([ float(x) for x in line.strip().split()[1:] ])
-		for i in [3,2,1,0]:
+		for i in [3,2,1,0]:	#we need complemented matrix, too
 			n.append(m[i])
 		return (np.array(m), np.array(n))
 	else:
@@ -179,8 +192,6 @@ def blosAA(aa, pos, blos):
 		if aa[pos] != bases[t]:
 			bs[t] = blos[wt_aa][mut_aa[t]]
 	return bs					
-
-#	return [ blos[wt_aa][translate_sequence(mutAA(aa, pos, b))] for b in bases ] 
 
 if __name__ == "__main__":
 	
