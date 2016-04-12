@@ -15,6 +15,7 @@ def main(data, datcol, out, countfilt):
 	df_new = df["sequence"].transpose().apply(func=HGVS_to_PosMut)
 	df_new.columns = ["pos", "ref", "mut"]
 	#extract data column of interest
+	
 	df_new["dat"] = df[datcol]
 
 	#take mean of each mutation at a position
@@ -25,16 +26,20 @@ def main(data, datcol, out, countfilt):
 	df_sd = df_piv.std(1)
 	#plot
 	fig, ax = plt.subplots()
-	ax.errorbar(df_piv.index, df_mean, yerr = df_sd, capsize = 0, color="r")
+#	ax.errorbar(df_piv.index, df_mean, yerr = df_sd, capsize = 0, color="r")
 	ax.bar(df_piv.index, df_mean, color='r', align='center')
 	ax.set_ylabel("Average wt-normalized slope")
-	ax.locator_params(nbins=10)
-#	ax.set_xticks(df_piv.index)
+	xtickloc = mpl.ticker.MultipleLocator(10)
+	xtickform = mpl.ticker.ScalarFormatter()
+	ax.xaxis.set_major_locator(xtickloc)
+	ax.xaxis.set_major_formatter(xtickform)
+	ax.xaxis.set_minor_locator(mpl.ticker.AutoMinorLocator())
+
 	plt.savefig("test.pdf")
 	
 def HGVS_to_PosMut(hgvs):
 	if hgvs != "_wt":
-		posmut = re.match('n\.(\d+)([ACDEFGHIJKLMNPQRSTUVWY]+)>([ACDEFGHIJKLMNPQRSTUVWY]+)', hgvs)
+		posmut = re.match('n\.(-?\d+)([ACDEFGHIJKLMNPQRSTUVWY]+)>([ACDEFGHIJKLMNPQRSTUVWY]+)', hgvs)
 		return pd.Series((int(posmut.groups()[0]), posmut.groups()[1], posmut.groups()[2]))
 
 if __name__ == "__main__":
@@ -44,8 +49,8 @@ if __name__ == "__main__":
 	import pandas as pd
 	import numpy as np
 	
-	import matplotlib
-	matplotlib.use('Agg')
+	import matplotlib as mpl
+	mpl.use('Agg')
 	import matplotlib.pyplot as plt
 
 	parser = OptionParser()

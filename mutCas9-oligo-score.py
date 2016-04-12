@@ -259,7 +259,7 @@ def plotHeatmap(heatmap, seq, name):
 	fig.set_size_inches(10,25)
 	axarr = plt.subplot()
 	
-	hm_plot = axarr.imshow(hm, cmap="Greys", interpolation = 'none',
+	hm_plot = axarr.imshow(hm, cmap=mpl.cm.get_cmap("YlGnBu", 10), interpolation = 'none',
 				aspect='auto', norm=mpl.colors.Normalize(vmin, vmax),
 				extent=[0, len(amino_acids), 
 						max(column_labels)+1, min(column_labels)])
@@ -279,8 +279,8 @@ def plotHeatmap(heatmap, seq, name):
 	#Mark the WT positions
 	for i in column_labels:
 		axarr.add_patch(mpl.patches.Rectangle((wt_aa_index[i],i), 1, 1,
-						fill=False, facecolor="none", edgecolor="deepskyblue",
-						ls='dotted')) 
+						fill=False, facecolor="none", edgecolor="blue",
+						ls='dotted', lw=1)) 
 	fig.colorbar(hm_plot)
 	plt.tight_layout()
 

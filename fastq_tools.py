@@ -5,7 +5,7 @@ import string
 import re
 from itertools import izip_longest
 from array import array
-
+import gzip
 
 __all__ = ["check_fastq_extension", 
            "fastq_quality", 
@@ -79,7 +79,10 @@ def read_fastq(fname, filter_function=None, buffer_size=BUFFER_SIZE):
     read_fastq_multi instead.
     """
     try:
-        handle = open(fname, "U")
+	if fname.endswith(".gz") == True:
+		handle = gzip.open(fname, "rU")
+	else:
+        	handle = open(fname, "U")
     except IOError:
         print("Error: could not open FASTQ file '%s'" % fname, file=stderr)
         return
