@@ -144,7 +144,7 @@ def read_fastq_multi(fnames, filter_function=None, buffer_size=BUFFER_SIZE,
     """
     fq_generators = list()
     for f in fnames:
-	if f != None:
+	    if f != None:
         	fq_generators.append(read_fastq(f, filter_function=None,
                 	             buffer_size=BUFFER_SIZE))
 

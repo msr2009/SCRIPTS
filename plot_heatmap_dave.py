@@ -26,7 +26,16 @@ def main(df, wt_seq, dna, figout, offset, subset, set_min, set_max, xlim):
 	#make a pivot table of all the data 
 	### KINDA HACKY -- THIS ASSUMES THERE'S AT LEAST ONE DATAPOINT FOR EACH POSITION
 	data = df.pivot("pos", "mut", "dat")
-#	print df.count()
+	for i in range(offset+1, offset+len(WT_sequence)):
+		try:
+			data.ix[i]
+		except KeyError:
+			data.ix[i] = [np.nan, np.nan, np.nan, np.nan]
+
+	data = data.sort_index()
+	print data.shape, len(WT_aa_index)
+	print WT_aa_index
+
 	if set_max == None:	
 		vmax=max(df["dat"])
 		print "vmax: " + str(vmax)
@@ -39,7 +48,7 @@ def main(df, wt_seq, dna, figout, offset, subset, set_min, set_max, xlim):
 	else:
 		vmin=set_min
 
-	column_labels = data.index.values - 1	
+	column_labels = data.index.values
 
 	#also make dataframe for mean and sd for each position	
 	data2 = pd.DataFrame()
@@ -56,7 +65,7 @@ def main(df, wt_seq, dna, figout, offset, subset, set_min, set_max, xlim):
 
 	#set color for masked array entries
 	my_cmap.set_bad('white') 
-	wt_col = "orange"
+	wt_col = "lightblue"
 	#make a normalize instance for all the plots
 	my_norm = mpl.colors.Normalize(vmin, vmax)
 	#make a new Series based on the colormap to define a color for each mean value

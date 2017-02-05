@@ -1,6 +1,5 @@
 """
-splitFastq.py
-
+splitFastq.py:c`
 Takes an input of a FASTQ file name, and splits reads based on a list of index sequences, as well as a mismatch threshold
 
 Matt Rich, 2/2013
@@ -35,7 +34,7 @@ def main(forward, reverse, index, mismatch, index_list, name_list):
 		found_index = False
 		
 		#check index sequence
-                if i_read in index_list:
+		if i_read in index_list:
 			print_fastq(record[0], outfiles[i_read][0])
 			print_fastq(record[1], outfiles[i_read][1])
 			if reverse != None:
@@ -91,7 +90,6 @@ def readIndexFile(f):
 		n.append(l[0])
 	return d, n
 
-if __name__ == '__main__':
 	from optparse import OptionParser
 	from fastq_tools import read_fastq_multi, print_fastq
 
