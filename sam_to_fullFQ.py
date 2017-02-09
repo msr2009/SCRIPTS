@@ -12,9 +12,9 @@ import pysam
 from itertools import groupby
 
 
-def main(sam, wildtype, paired):
+def main(sam, wildtype, paired, excludeWT):
 	#read wildtype FASTA file
-	for x in fasta_iter.fasta_iter(wildtype):
+	for x in fasta_iter(wildtype):
 		wt_name, wt_seq = x
 
 	#open sam/bam file
@@ -35,7 +35,9 @@ def main(sam, wildtype, paired):
 				new_qual = "".join(["A" for i in wt_seq[0:read.reference_start]]) + \
 							"".join([chr(y+33) for y in list(read.query_alignment_qualities)]) + \
 							"".join(["A" for j in wt_seq[read.reference_end:]])
-				printFASTQ(read.query_name, new_read, new_qual)
+				
+				if excludeWT == False or new_read != wt_seq:
+					printFASTQ(read.query_name, new_read, new_qual)
 		
 		else:
 			read2 = samfile.next()
@@ -47,7 +49,8 @@ def main(sam, wildtype, paired):
 				else:
 					new_read, new_qual = merge_reads(read2, read, wt_seq)
 				
-				printFASTQ(read.query_name, new_read, new_qual)
+				if excludeWT == False or new_read != wt_seq:
+					printFASTQ(read.query_name, new_read, new_qual)
 
 def merge_reads(r1, r2, wt):
 		wt_q = 63
@@ -104,6 +107,8 @@ if __name__ == "__main__":
 		default = False, help = "sam file contains paired reads")
 	parser.add_argument('--wt', action = 'store', type = str, dest = 'wildtype', 
 		help = "fasta file containing wildtype sequence")
+	parser.add_argument('--exclude-wt', action = 'store_true', type = str, dest =
+					'excludeWT', help = "only print mutated reads", default = False)
 	args = parser.parse_args()
 	
 	main(args.sam, args.wildtype, args.paired)	
