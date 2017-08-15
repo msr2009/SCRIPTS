@@ -7,8 +7,6 @@ sorted file, one position per line
 Matt Rich, 02/2017
 """
 
-import copy
-
 def main(reads, protein):
 	firstread = True
 	bases = {"protein": ['A', 'C', 'D', 'E', 'F', 'G', 'H', 

@@ -107,8 +107,8 @@ if __name__ == "__main__":
 		default = False, help = "sam file contains paired reads")
 	parser.add_argument('--wt', action = 'store', type = str, dest = 'wildtype', 
 		help = "fasta file containing wildtype sequence")
-	parser.add_argument('--exclude-wt', action = 'store_true', type = str, dest =
-					'excludeWT', help = "only print mutated reads", default = False)
+	parser.add_argument('--exclude-wt', action = 'store_true', dest = 'excludeWT', 
+		help = "only print mutated reads", default = False)
 	args = parser.parse_args()
 	
 	main(args.sam, args.wildtype, args.paired)	

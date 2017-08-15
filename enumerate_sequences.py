@@ -6,7 +6,7 @@ makes FASTA file containing all single mutations of a sequence
 Matt Rich, 8/2014
 """
 
-def main(seq, start, stop, offset, window):
+def main(seq, start, stop, offset, window, no_hgvs):
 	bases = ["A","C","T","G"]
 	if window == 0:
 		#print wildtype
@@ -24,7 +24,10 @@ def main(seq, start, stop, offset, window):
 			elif b != seq[i]:
 				new_seq = list(seq)
 				new_seq[i] = b
-				print ">n." + str(i+offset+1) + seq[i] + ">" + b
+				if not no_hgvs:
+					print ">n." + str(i+offset+1) + seq[i] + ">" + b
+				else:
+					print ">" + "_".join([str(i+offset+1), seq[i], b])	
 				print "".join(new_seq)
 
 if __name__ == "__main__":
@@ -37,11 +40,13 @@ if __name__ == "__main__":
 	parser.add_option('--start', action = 'store', type = 'int', dest = 'start', help = "position to begin mutatgenesis", default = 0)
 	parser.add_option('--stop', action = 'store', type = 'int', dest = 'stop', help = "position to end mutagenesis")
 	parser.add_option('--offset', action = 'store', type = 'int', dest = 'offset', help = "numbering offset", default = 0)
+	parser.add_option('--no-hgvs', action = 'store_true', dest = "nohgvs", help = "fasta name is '>POS REF ALT' instead of HGVS string", default=False)
 	parser.add_option('--window', action = 'store', type = 'int', dest = 'window', help = 'number of bases on each side to print for each mutant', default=0)
 	(option, args) = parser.parse_args()
 	
 	if option.stop == None:
 		option.stop = len(option.seq)
 
-	main(option.seq.upper(), option.start, option.stop, option.offset, option.window)	
+	main(option.seq.upper(), option.start, option.stop, option.offset,
+					option.window, option.nohgvs)	
 
